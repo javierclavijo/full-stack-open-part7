@@ -3,8 +3,9 @@ import blogService from "../services/blogs"
 import PropTypes from "prop-types"
 import {setNotification} from "../reducers/notificationReducer";
 import {useDispatch} from "react-redux";
+import {removeBlog} from "../reducers/blogsReducer";
 
-const Blog = ({blog, blogs, setBlogs, user}) => {
+const Blog = ({blog, user}) => {
     const [showDetail, setShowDetail] = useState(false)
     const [likes, setLikes] = useState(blog.likes)
     const blogStyle = {border: "2px solid", margin: "5px", padding: "5px"}
@@ -16,7 +17,7 @@ const Blog = ({blog, blogs, setBlogs, user}) => {
             try {
                 await blogService.deleteBlog(blog)
                 dispatch(setNotification(`${blog.title} successfully deleted`))
-                setBlogs(blogs.filter(b => b.id !== blog.id))
+                dispatch(removeBlog(blog))
             } catch (error) {
                 dispatch(setNotification(`Could not delete ${blog.title}`))
             }
@@ -74,8 +75,6 @@ const Blog = ({blog, blogs, setBlogs, user}) => {
 
 Blog.propTypes = {
     blog: PropTypes.object.isRequired,
-    blogs: PropTypes.array.isRequired,
-    setBlogs: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
 }
 

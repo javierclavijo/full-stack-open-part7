@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from "react"
-import Blog from "./components/Blog"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 import BlogForm from "./components/BlogForm"
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {setNotification} from "./reducers/notificationReducer";
 import Notification from "./components/Notification";
+import {initializeBlogs} from "./reducers/blogsReducer";
+import BlogList from "./components/BlogList";
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [user, setUser] = useState(null)
@@ -24,9 +24,7 @@ const App = () => {
     }, [])
 
     useEffect(() => {
-        blogService.getAll().then(blogs =>
-            setBlogs(blogs.sort((b1, b2) => b2.likes - b1.likes))
-        )
+        dispatch(initializeBlogs())
     }, [])
 
     const handleLogin = async (event) => {
@@ -87,19 +85,8 @@ const App = () => {
                     <p>{user.name} logged in</p>
                     <button type="button" onClick={logOut}>Log out</button>
                 </div>
-                <BlogForm
-                    blogs={blogs}
-                    setBlogs={setBlogs}
-                />
-                {blogs.map(blog =>
-                    <Blog
-                        key={blog.id}
-                        blog={blog}
-                        blogs={blogs}
-                        setBlogs={setBlogs}
-                        user={user}
-                    />
-                )}
+                <BlogForm/>
+                <BlogList user={user}/>
             </div>
         )
     }

@@ -2,7 +2,7 @@ import Blog from "./Blog";
 import React from "react";
 import {useSelector} from "react-redux";
 
-const BlogList = ({setBlogs}) => {
+const BlogList = ({user}) => {
     const blogs = useSelector(state => state.blogs)
     return (
         <div>
@@ -10,11 +10,11 @@ const BlogList = ({setBlogs}) => {
                 <Blog
                     key={blog.id}
                     blog={blog}
-                    blogs={blogs}
-                    setBlogs={setBlogs}
                     user={user}
                 />
             )}
         </div>
     )
 }
+
+export default BlogList

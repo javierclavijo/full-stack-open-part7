@@ -2,8 +2,9 @@ import React, {useState} from "react"
 import blogService from "../services/blogs"
 import {setNotification} from "../reducers/notificationReducer";
 import {useDispatch} from "react-redux";
+import {addBlog} from "../reducers/blogsReducer";
 
-const BlogForm = ({blogs, setBlogs}) => {
+const BlogForm = () => {
     const [newBlogTitle, setNewBlogTitle] = useState("")
     const [newBlogAuthor, setNewBlogAuthor] = useState("")
     const [newBlogURL, setNewBlogURL] = useState("")
@@ -17,7 +18,7 @@ const BlogForm = ({blogs, setBlogs}) => {
                 {title: newBlogTitle, author: newBlogAuthor, url: newBlogURL})
             handleHide()
             dispatch(setNotification(`New blog: '${newBlog.title}', by ${newBlog.author}, at ${newBlog.url}`))
-            setBlogs([...blogs, newBlog])
+            dispatch(addBlog(newBlog))
         } catch (error) {
             dispatch(setNotification("Error submitting new blog!"))
         }
