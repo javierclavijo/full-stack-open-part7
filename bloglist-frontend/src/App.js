@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react"
+import React, {useState, useEffect} from "react"
 import Blog from "./components/Blog"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 import BlogForm from "./components/BlogForm"
+import {useDispatch, useSelector} from "react-redux";
+import {setNotification} from "./reducers/notificationReducer";
+import Notification from "./components/Notification";
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [user, setUser] = useState(null)
-    const [message, setMessage] = useState(null)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const bloglistUser = window.localStorage.getItem("bloglistUser")
@@ -29,44 +32,38 @@ const App = () => {
     const handleLogin = async (event) => {
         event.preventDefault()
         try {
-            const user = await loginService.login({ username, password })
+            const user = await loginService.login({username, password})
             window.localStorage.setItem(
                 "bloglistUser", JSON.stringify(user)
             )
             blogService.setToken(user.token)
-            setMessage(`Successfully logged in as ${user.name}`)
-            setTimeout(() => {
-                setMessage(null)
-            }, 5000)
+            dispatch(setNotification(`Successfully logged in as ${user.name}`))
             setUser(user)
             setUsername("")
             setPassword("")
         } catch (error) {
-            setMessage("Wrong credentials!")
-            setTimeout(() => {
-                setMessage(null)
-            }, 5000)
+            dispatch(setNotification("Wrong credentials!"))
         }
     }
 
     const loginForm = () => (
         <div>
             <h2>Log in</h2>
-            <Message/>
+            <Notification/>
             <form onSubmit={handleLogin}>
                 <div>
                     Username
                     <input type="text"
-                        value={username}
-                        name="Username"
-                        onChange={({ target }) => setUsername(target.value)}/>
+                           value={username}
+                           name="Username"
+                           onChange={({target}) => setUsername(target.value)}/>
                 </div>
                 <div>
                     Password
                     <input type="password"
-                        value={password}
-                        name="Password"
-                        onChange={({ target }) => setPassword(target.value)}/>
+                           value={password}
+                           name="Password"
+                           onChange={({target}) => setPassword(target.value)}/>
                 </div>
                 <button type="submit" id="loginButton">Login</button>
             </form>
@@ -76,26 +73,15 @@ const App = () => {
     const logOut = () => {
         window.localStorage.removeItem("bloglistUser")
         setUser(null)
-        setMessage("Logged out")
-        setTimeout(() => {
-            setMessage(null)
-        }, 5000)
+        dispatch(setNotification("Logged out"))
     }
-
-    const Message = () => {
-        if (message !== null) {
-            return <div style={{ border: "2px solid" }} id="message">{message}</div>
-        }
-        return null
-    }
-
 
     if (user === null) {
         return loginForm()
     } else {
         return (
             <div>
-                <Message/>
+                <Notification/>
                 <h2>blogs</h2>
                 <div>
                     <p>{user.name} logged in</p>
@@ -104,7 +90,6 @@ const App = () => {
                 <BlogForm
                     blogs={blogs}
                     setBlogs={setBlogs}
-                    setMessage={setMessage}
                 />
                 {blogs.map(blog =>
                     <Blog
@@ -113,7 +98,6 @@ const App = () => {
                         blogs={blogs}
                         setBlogs={setBlogs}
                         user={user}
-                        setMessage={setMessage}
                     />
                 )}
             </div>
