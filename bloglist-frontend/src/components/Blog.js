@@ -2,14 +2,15 @@ import React, {useState} from "react"
 import blogService from "../services/blogs"
 import PropTypes from "prop-types"
 import {setNotification} from "../reducers/notificationReducer";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {removeBlog} from "../reducers/blogsReducer";
 
-const Blog = ({blog, user}) => {
+const Blog = ({blog}) => {
     const [showDetail, setShowDetail] = useState(false)
     const [likes, setLikes] = useState(blog.likes)
     const blogStyle = {border: "2px solid", margin: "5px", padding: "5px"}
     const dispatch = useDispatch()
+    const user = useSelector(state => state.user)
 
     const handleDelete = async (event) => {
         event.preventDefault()
@@ -74,8 +75,7 @@ const Blog = ({blog, user}) => {
 }
 
 Blog.propTypes = {
-    blog: PropTypes.object.isRequired,
-    user: PropTypes.object.isRequired,
+    blog: PropTypes.object.isRequired
 }
 
 export default Blog

@@ -2,24 +2,32 @@ import React, {useState, useEffect} from "react"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 import BlogForm from "./components/BlogForm"
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setNotification} from "./reducers/notificationReducer";
 import Notification from "./components/Notification";
 import {initializeBlogs} from "./reducers/blogsReducer";
 import BlogList from "./components/BlogList";
+import {clearUser, setUser} from "./reducers/userReducer";
+import {Redirect, Route, Switch} from "react-router";
+import UserList from "./components/UserList";
+
+const routes = {
+    blogList: '/blogs',
+    userList: '/users',
+}
 
 const App = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    const [user, setUser] = useState(null)
     const dispatch = useDispatch()
+    const user = useSelector(state => state.user)
 
     useEffect(() => {
         const bloglistUser = window.localStorage.getItem("bloglistUser")
         if (bloglistUser) {
-            const user = JSON.parse(bloglistUser)
-            setUser(user)
-            blogService.setToken(user.token)
+            const userData = JSON.parse(bloglistUser)
+            dispatch(setUser(userData))
+            blogService.setToken(userData.token)
         }
     }, [])
 
@@ -30,13 +38,13 @@ const App = () => {
     const handleLogin = async (event) => {
         event.preventDefault()
         try {
-            const user = await loginService.login({username, password})
+            const userData = await loginService.login({username, password})
             window.localStorage.setItem(
-                "bloglistUser", JSON.stringify(user)
+                "bloglistUser", JSON.stringify(userData)
             )
-            blogService.setToken(user.token)
-            dispatch(setNotification(`Successfully logged in as ${user.name}`))
-            setUser(user)
+            dispatch(setUser(userData))
+            blogService.setToken(userData.token)
+            dispatch(setNotification(`Successfully logged in as ${userData.name}`))
             setUsername("")
             setPassword("")
         } catch (error) {
@@ -70,11 +78,11 @@ const App = () => {
 
     const logOut = () => {
         window.localStorage.removeItem("bloglistUser")
-        setUser(null)
+        dispatch(clearUser())
         dispatch(setNotification("Logged out"))
     }
 
-    if (user === null) {
+    if (!user) {
         return loginForm()
     } else {
         return (
@@ -85,8 +93,18 @@ const App = () => {
                     <p>{user.name} logged in</p>
                     <button type="button" onClick={logOut}>Log out</button>
                 </div>
-                <BlogForm/>
-                <BlogList user={user}/>
+                <Switch>
+                    <Route path={routes.blogList}>
+                        <BlogForm/>
+                        <BlogList/>
+                    </Route>
+                    <Route path={routes.userList}>
+                        <UserList/>
+                    </Route>
+                    <Route path='/'>
+                        <Redirect to={routes.blogList}/>
+                    </Route>
+                </Switch>
             </div>
         )
     }

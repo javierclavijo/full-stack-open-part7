@@ -2,13 +2,14 @@ const initialState = ''
 let timeoutID
 
 const notificationActions = {
-    SET: 'SET',
-    CLEAR: 'CLEAR'
+    SET: 'SET_NOTIFICATION',
+    CLEAR: 'CLEAR_NOTIFICATION'
 }
 
 const notificationReducer = (state = initialState, action) => {
     switch (action.type) {
         case notificationActions.SET:
+            console.log(action.data)
             return action.data
         case notificationActions.CLEAR:
             return initialState
