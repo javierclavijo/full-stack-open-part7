@@ -7,11 +7,12 @@ import {setNotification} from "./reducers/notificationReducer";
 import Notification from "./components/Notification";
 import {initializeBlogs} from "./reducers/blogsReducer";
 import BlogList from "./components/BlogList";
-import {clearUser, setUser} from "./reducers/authReducer";
+import {setUser} from "./reducers/authReducer";
 import {Redirect, Route, Switch} from "react-router";
 import UserList from "./components/UserList";
 import User from './components/User';
 import BlogDetail from "./components/BlogDetail";
+import Navbar from "./components/Navbar";
 
 export const routes = {
     blogList: '/blogs',
@@ -80,23 +81,14 @@ const App = () => {
         </div>
     )
 
-    const logOut = () => {
-        window.localStorage.removeItem("bloglistUser")
-        dispatch(clearUser())
-        dispatch(setNotification("Logged out"))
-    }
-
     if (!user.token) {
         return loginForm()
     } else {
         return (
             <div>
+                <Navbar/>
                 <Notification/>
                 <h2>blogs</h2>
-                <div>
-                    <p>{user.name} logged in</p>
-                    <button type="button" onClick={logOut}>Log out</button>
-                </div>
                 <Switch>
                     <Route path={routes.blogDetail}>
                         <BlogDetail/>
