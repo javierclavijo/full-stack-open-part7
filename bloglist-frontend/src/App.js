@@ -7,7 +7,7 @@ import {setNotification} from "./reducers/notificationReducer";
 import Notification from "./components/Notification";
 import {initializeBlogs} from "./reducers/blogsReducer";
 import BlogList from "./components/BlogList";
-import {clearUser, setUser} from "./reducers/userReducer";
+import {clearUser, setUser} from "./reducers/authReducer";
 import {Redirect, Route, Switch} from "react-router";
 import UserList from "./components/UserList";
 
@@ -82,7 +82,7 @@ const App = () => {
         dispatch(setNotification("Logged out"))
     }
 
-    if (!user) {
+    if (!user.token) {
         return loginForm()
     } else {
         return (

@@ -18,7 +18,7 @@ export const clearUser = () => {
     }
 }
 
-const userReducer = (state = initialState, action) => {
+const authReducer = (state = initialState, action) => {
     switch (action.type) {
         case userActions.SET:
             return action.data
@@ -29,4 +29,4 @@ const userReducer = (state = initialState, action) => {
     }
 }
 
-export default userReducer
+export default authReducer
