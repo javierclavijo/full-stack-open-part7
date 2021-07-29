@@ -10,10 +10,12 @@ import BlogList from "./components/BlogList";
 import {clearUser, setUser} from "./reducers/authReducer";
 import {Redirect, Route, Switch} from "react-router";
 import UserList from "./components/UserList";
+import User from './components/User';
 
-const routes = {
+export const routes = {
     blogList: '/blogs',
     userList: '/users',
+    userDetail: '/users/:id'
 }
 
 const App = () => {
@@ -97,6 +99,9 @@ const App = () => {
                     <Route path={routes.blogList}>
                         <BlogForm/>
                         <BlogList/>
+                    </Route>
+                    <Route path={routes.userDetail}>
+                        <User/>
                     </Route>
                     <Route path={routes.userList}>
                         <UserList/>

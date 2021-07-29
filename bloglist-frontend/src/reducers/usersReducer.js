@@ -1,6 +1,6 @@
 import usersService from "../services/users";
 
-const initialState = {}
+const initialState = []
 
 const usersActions = {SET: 'SET_USERS'}
 
