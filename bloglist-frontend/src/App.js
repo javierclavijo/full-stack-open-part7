@@ -11,9 +11,11 @@ import {clearUser, setUser} from "./reducers/authReducer";
 import {Redirect, Route, Switch} from "react-router";
 import UserList from "./components/UserList";
 import User from './components/User';
+import BlogDetail from "./components/BlogDetail";
 
 export const routes = {
     blogList: '/blogs',
+    blogDetail: '/blogs/:id',
     userList: '/users',
     userDetail: '/users/:id'
 }
@@ -96,12 +98,15 @@ const App = () => {
                     <button type="button" onClick={logOut}>Log out</button>
                 </div>
                 <Switch>
-                    <Route path={routes.blogList}>
-                        <BlogForm/>
-                        <BlogList/>
+                    <Route path={routes.blogDetail}>
+                        <BlogDetail/>
                     </Route>
                     <Route path={routes.userDetail}>
                         <User/>
+                    </Route>
+                    <Route path={routes.blogList}>
+                        <BlogForm/>
+                        <BlogList/>
                     </Route>
                     <Route path={routes.userList}>
                         <UserList/>

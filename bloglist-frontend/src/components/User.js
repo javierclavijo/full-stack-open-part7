@@ -1,14 +1,23 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useRouteMatch} from "react-router";
 import {routes} from "../App";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchUsers} from "../reducers/usersReducer";
 
 const User = () => {
+    const dispatch = useDispatch()
     const match = useRouteMatch(routes.userDetail)
     const users = useSelector(state => state.users)
     const user = match
         ? users.find(u => u.id === match.params.id)
         : null
+
+    useEffect(() => {
+        if (!users.length) {
+            dispatch(fetchUsers())
+        }
+    }, [])
+
 
     if (!user) {
         return <div>User not found.</div>
