@@ -12,7 +12,8 @@ import {Redirect, Route, Switch} from "react-router";
 import UserList from "./components/UserList";
 import User from './components/User';
 import BlogDetail from "./components/BlogDetail";
-import Navbar from "./components/Navbar";
+import AppNavbar from "./components/AppNavbar";
+import {Button, Card, Form} from "react-bootstrap";
 
 export const routes = {
     blogList: '/blogs',
@@ -58,26 +59,34 @@ const App = () => {
     }
 
     const loginForm = () => (
-        <div>
-            <h2>Log in</h2>
-            <Notification/>
-            <form onSubmit={handleLogin}>
-                <div>
-                    Username
-                    <input type="text"
-                           value={username}
-                           name="Username"
-                           onChange={({target}) => setUsername(target.value)}/>
-                </div>
-                <div>
-                    Password
-                    <input type="password"
-                           value={password}
-                           name="Password"
-                           onChange={({target}) => setPassword(target.value)}/>
-                </div>
-                <button type="submit" id="loginButton">Login</button>
-            </form>
+        <div className="container">
+            <Card body className="m-2">
+                <Card.Title>Log in</Card.Title>
+                <Notification/>
+                <Form onSubmit={handleLogin}>
+                    <Form.Group>
+                        <Form.Label>
+                            Username
+                        </Form.Label>
+                        <Form.Control type="text"
+                                      value={username}
+                                      name="Username"
+                                      onChange={({target}) => setUsername(target.value)}/>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>
+                            Password
+                        </Form.Label>
+                        <Form.Control type="password"
+                                      value={password}
+                                      name="Password"
+                                      onChange={({target}) => setPassword(target.value)}/>
+                    </Form.Group>
+                    <Button type="submit" id="loginButton">
+                        Login
+                    </Button>
+                </Form>
+            </Card>
         </div>
     )
 
@@ -85,10 +94,9 @@ const App = () => {
         return loginForm()
     } else {
         return (
-            <div>
-                <Navbar/>
+            <div className="container">
+                <AppNavbar/>
                 <Notification/>
-                <h2>blogs</h2>
                 <Switch>
                     <Route path={routes.blogDetail}>
                         <BlogDetail/>

@@ -6,6 +6,7 @@ import {initializeBlogs, removeBlog} from "../reducers/blogsReducer";
 import {useHistory, useRouteMatch} from "react-router";
 import {blogStyle} from "./Blog";
 import {routes} from "../App";
+import {Button, Card, Form, Table} from "react-bootstrap";
 
 const BlogDetail = () => {
     const dispatch = useDispatch()
@@ -19,6 +20,7 @@ const BlogDetail = () => {
         : null
 
     const [likes, setLikes] = useState(0)
+    const [comment, setComment] = useState("")
 
     useEffect(() => {
         if (!blogs.length) {
@@ -57,31 +59,71 @@ const BlogDetail = () => {
         }
     }
 
+    const handleComment = (event) => {
+        event.preventDefault()
+        blogService.addComment(blog.id, comment)
+        blog.comments.push(comment)
+        setComment("")
+    }
+
     if (!blog) {
         return <div>Blog not found.</div>
     }
 
-    return <div style={blogStyle} className="blog">
-        <h3>{blog.title}</h3>
+    return <Card body className="blog">
+        <Card.Title>{blog.title}</Card.Title>
 
-        <p>URL: {blog.url}</p>
-        <p>Likes: <span className="numberOfLikes">{likes}</span>
-            <button type="button"
-                    onClick={handleLike}
-                    className="likeBlog">
-                Like
-            </button>
-        </p>
-        <p>Author: {blog.author}</p>
-        {blog.user && blog.user.name === user.name ?
-            <button type="button"
-                    onClick={handleDelete}
-                    className="deleteBlog"
-            >
-                Delete</button> :
-            null
+        <Table>
+            <tbody>
+            <tr>
+                <th>URL</th>
+                <td>{blog.url}</td>
+            </tr>
+            <tr>
+                <th>likes</th>
+                <td>
+                    <span className="numberOfLikes">{likes}</span>
+                    <Button type="button"
+                            onClick={handleLike}
+                            className="likeBlog mx-3">
+                        Like
+                    </Button>
+                </td>
+            </tr>
+            <tr>
+                <th>Author</th>
+                <td>{blog.author}</td>
+            </tr>
+            </tbody>
+        </Table>
+        {blog.user && blog.user.name === user.name
+            ? <Button type="button"
+                      onClick={handleDelete}
+                      className="deleteBlog"
+                      variant="outline-danger"
+            >Delete</Button>
+            : null
         }
-    </div>
+        <h3>Comments</h3>
+        {blog.comments.length
+            ? <ul>
+                {blog.comments.map(comment =>
+                    <li>{comment}</li>
+                )}
+            </ul>
+            : <div>No comments yet</div>
+        }
+        <Form onSubmit={handleComment}>
+            <Form.Group>
+                <Form.Control type="text"
+                              value={comment}
+                              name="Comment"
+                              onChange={({target}) => setComment(target.value)}
+                />
+            </Form.Group>
+            <Button type="submit">Add comment</Button>
+        </Form>
+    </Card>
 }
 
 export default BlogDetail

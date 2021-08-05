@@ -6,11 +6,13 @@ export const blogStyle = {border: "2px solid", margin: "5px", padding: "5px"}
 
 const Blog = ({blog}) => {
 
-    return (<div style={blogStyle} className="blog">
-        <Link to={`/blogs/${blog.id}`}>
-            {blog.title} {blog.author}
-        </Link>
-    </div>)
+    return (<tr className="blog">
+        <td>
+            <Link to={`/blogs/${blog.id}`}>
+                {blog.title} {blog.author}
+            </Link>
+        </td>
+    </tr>)
 }
 
 Blog.propTypes = {
